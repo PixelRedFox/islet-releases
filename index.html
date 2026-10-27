@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Islet: Dynamic Island для Windows</title>
+<meta name="description" content="Острівець угорі екрана Windows: музика, таймери, календар, погода, буфер обміну, ШІ-чат і Claude Code в одному місці.">
+<meta property="og:title" content="Islet: Dynamic Island для Windows">
+<meta property="og:description" content="Музика, таймери, календар, ШІ-чат і сповіщення в одному острові вгорі екрана.">
+<meta property="og:image" content="screenshots/home.png">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<style>
+  :root {
+    --bg: #0c0c0e;
+    --surface: #141417;
+    --surface-2: #1b1b1f;
+    --line: rgb(255 255 255 / .08);
+    --text: #f3f1ec;
+    --text-2: #b4b2ad;
+    --text-3: #85837f;
+    --accent: #ffb35c;
+    --accent-ink: #1f1306;
+    --radius: 20px;
+    --shadow: 0 30px 80px -30px rgb(0 0 0 / .7);
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f4f3f1;
+      --surface: #ffffff;
+      --surface-2: #ebe9e6;
+      --line: rgb(20 20 24 / .1);
+      --text: #141417;
+      --text-2: #4b4a47;
+      --text-3: #6f6d69;
+      --accent: #e98a1e;
+      --accent-ink: #1f1306;
+      --shadow: 0 30px 70px -30px rgb(30 25 20 / .35);
+      color-scheme: light;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+    font-weight: 650;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+    margin: 0;
+    text-wrap: balance;
+  }
+  p { margin: 0; color: var(--text-2); max-width: 62ch; text-wrap: pretty; }
+  a { color: inherit; }
+  img { display: block; max-width: 100%; height: auto; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 104px 0; }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 24px; border-radius: 999px;
+    font: inherit; font-weight: 600; font-size: 16px; white-space: nowrap;
+    text-decoration: none; cursor: pointer; border: 0;
+    transition: transform .25s cubic-bezier(.16,1,.3,1), background-color .2s, box-shadow .25s;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn-primary { background: var(--accent); color: var(--accent-ink); box-shadow: 0 10px 30px -12px var(--accent); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 16px 36px -14px var(--accent); }
+  .btn-ghost { background: var(--surface-2); color: var(--text); }
+  .btn-ghost:hover { background: color-mix(in srgb, var(--surface-2) 80%, var(--text) 8%); }
+  .btn i { font-size: 20px; }
+
+  /* ---------- nav ---------- */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border-bottom: 1px solid var(--line);
+  }
+  nav { display: flex; align-items: center; gap: 28px; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 19px; text-decoration: none; }
+  .brand img { width: 30px; height: 30px; border-radius: 8px; }
+  .nav-links { display: flex; gap: 26px; margin-left: auto; }
+  .nav-links a { text-decoration: none; color: var(--text-2); font-size: 15px; }
+  .nav-links a:hover { color: var(--text); }
+  nav .btn { padding: 10px 18px; font-size: 15px; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 72px 0 96px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 56px; align-items: center; }
+  .hero h1 { font-size: clamp(40px, 5.4vw, 66px); }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { font-size: 19px; margin-top: 22px; max-width: 34ch; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+  .shot {
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow); border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .hero-shot { --tilt: -1.2deg; transform: rotate(var(--tilt)); }
+
+  /* ---------- pills ---------- */
+  .pills-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 64px; align-items: center; }
+  .pills-grid h2, .split h2, .stack h2, .download h2 { font-size: clamp(32px, 3.6vw, 46px); }
+  .pills-grid p { margin-top: 18px; }
+  .pill-list { display: grid; gap: 14px; }
+  .pill-list img { border-radius: 14px; border: 1px solid var(--line); }
+  .pill-list img:nth-child(2n) { width: 92%; margin-left: 8%; }
+
+  /* ---------- bento ---------- */
+  .bento-head { max-width: 640px; margin-bottom: 44px; }
+  .bento-head p { margin-top: 16px; }
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+  .cell {
+    position: relative; overflow: hidden;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    display: flex; flex-direction: column;
+  }
+  .cell-text { padding: 24px 26px 20px; }
+  .cell h3 { font-size: 21px; display: flex; align-items: center; gap: 10px; }
+  .cell h3 i { color: var(--accent); font-size: 22px; }
+  .cell p { font-size: 15.5px; margin-top: 8px; }
+  .cell .crop { margin-top: auto; aspect-ratio: 4 / 3; overflow: hidden; }
+  .cell .crop img { width: 230%; max-width: none; transform: translate(-2.5%, 0); }
+  .cell.wide .crop { aspect-ratio: auto; padding: 0 0 0 26px; }
+  .cell.wide .crop img { width: 100%; transform: none; border-radius: 14px 0 0 0; }
+  .c-chat { grid-column: span 4; }
+  .c-cal { grid-column: span 2; }
+  .c-weather, .c-track, .c-clip { grid-column: span 2; }
+  .c-alert { grid-column: span 6; display: grid; grid-template-columns: 1fr 1.4fr; align-items: center;
+    background: radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%), var(--surface); }
+  .c-alert .alert-img { padding: 26px 26px 26px 0; }
+  .c-alert .alert-img img { border-radius: 14px; }
+
+  /* ---------- command bar ---------- */
+  .stack { text-align: left; }
+  .stack p { margin-top: 16px; }
+  .cmd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 44px; align-items: start; }
+  .cmd-grid figure { margin: 0; }
+  .cmd-grid figcaption { margin-top: 14px; color: var(--text-3); font-size: 15px; }
+  .examples { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .examples code {
+    font-family: "Cascadia Code", Consolas, ui-monospace, monospace; font-size: 14px;
+    background: var(--surface-2); color: var(--text); padding: 7px 13px; border-radius: 999px;
+  }
+
+  /* ---------- claude ---------- */
+  .split { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: center; }
+  .split p { margin-top: 18px; }
+  .split .shots { display: grid; gap: 16px; }
+
+  /* ---------- facts ---------- */
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; border-top: 1px solid var(--line); padding-top: 48px; }
+  .facts i { font-size: 28px; color: var(--accent); }
+  .facts h3 { font-size: 18px; margin: 14px 0 6px; letter-spacing: -0.01em; }
+  .facts p { font-size: 15px; }
+
+  /* ---------- download ---------- */
+  .download { padding-bottom: 120px; }
+  .dl-box {
+    border-radius: 28px; padding: 64px;
+    background:
+      radial-gradient(80% 120% at 0% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 55%),
+      var(--surface);
+    border: 1px solid var(--line);
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center;
+  }
+  .dl-box p { margin-top: 16px; }
+  .dl-meta { margin-top: 18px; color: var(--text-3); font-size: 15px; min-height: 1.6em; }
+  .dl-box .btn { margin-top: 30px; padding: 16px 28px; font-size: 17px; }
+  .steps { display: grid; gap: 18px; margin: 0; padding: 0; list-style: none; counter-reset: s; }
+  .steps li { display: grid; grid-template-columns: 36px 1fr; gap: 14px; align-items: start; color: var(--text-2); font-size: 15.5px; }
+  .steps li::before {
+    counter-increment: s; content: counter(s);
+    width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--surface-2); color: var(--text); font-weight: 600; font-size: 14px;
+  }
+  .steps strong { color: var(--text); font-weight: 600; }
+
+  footer { border-top: 1px solid var(--line); padding: 32px 0 48px; color: var(--text-3); font-size: 14.5px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; }
+  footer a { color: var(--text-2); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+  footer .right { margin-left: auto; display: flex; gap: 24px; }
+
+  /* ---------- motion: reveal on scroll (content stays visible without JS) ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .js .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); transition-delay: var(--d, 0s); }
+    .js .reveal.in { opacity: 1; transform: none; }
+    .hero-shot { animation: float-in 1.1s cubic-bezier(.16,1,.3,1) both .15s; }
+    @keyframes float-in { from { opacity: 0; transform: translateY(40px) rotate(-3deg); } to { opacity: 1; transform: rotate(var(--tilt)); } }
+    .cell { transition: transform .4s cubic-bezier(.16,1,.3,1), border-color .3s; }
+    .cell:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+  }
+
+  /* ---------- mobile ---------- */
+  @media (max-width: 900px) {
+    section { padding: 72px 0; }
+    .wrap { padding: 0 16px; }
+    .nav-links { display: none; }
+    nav .btn { margin-left: auto; }
+    nav .btn .long { display: none; }
+    .hero { padding: 40px 0 64px; }
+    .hero-grid, .pills-grid, .split, .dl-box, .c-alert { grid-template-columns: 1fr; }
+    .hero-grid { gap: 40px; }
+    .hero-shot { --tilt: 0deg; }
+    .pill-list img:nth-child(2n) { width: 100%; margin-left: 0; }
+    .bento { grid-template-columns: 1fr; }
+    .bento > .cell { grid-column: auto; }
+    .c-alert .alert-img { padding: 0 20px 20px; }
+    .cmd-grid { grid-template-columns: 1fr; }
+    .split .shots { order: 2; }
+    .facts { grid-template-columns: 1fr 1fr; gap: 28px; }
+    .dl-box { padding: 36px 22px; }
+    footer .right { margin-left: 0; }
+  }
+  @media (max-width: 520px) {
+    .facts { grid-template-columns: 1fr; }
+    .btn { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<header>
+  <nav class="wrap" aria-label="Головне меню">
+    <a class="brand" href="#"><img src="icon.png" alt="" width="30" height="30">Islet</a>
+    <div class="nav-links">
+      <a href="#features">Можливості</a>
+      <a href="#command">Командний рядок</a>
+      <a href="#claude">Claude Code</a>
+    </div>
+    <a class="btn btn-primary" href="#download"><i class="ph ph-windows-logo"></i><span>Завантажити<span class="long"> для Windows</span></span></a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>Dynamic Island <em>для Windows</em></h1>
+        <p>Музика, таймери, календар, погода й ШІ-чат у маленькому острові вгорі екрана. Наведіть мишку, і він розкриється.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#download"><i class="ph ph-windows-logo"></i>Завантажити для Windows</a>
+          <a class="btn btn-ghost" href="#features">Що він вміє</a>
+        </div>
+      </div>
+      <div class="shot hero-shot">
+        <img src="screenshots/home.png" width="1480" height="695" alt="Розгорнутий острів Islet: плеєр з обкладинкою, керування Wi-Fi, Bluetooth і темою, гучність та інструменти екрана">
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap pills-grid">
+      <div class="reveal">
+        <h2>Найважливіше зараз, без зайвих вікон</h2>
+        <p>У спокої острів стає маленькою пігулкою: трек, що грає, найближча нарада, таймер чи час на задачу. Нічого не відбувається? У ньому живе персонаж, який стежить за курсором і танцює під музику.</p>
+      </div>
+      <div class="pill-list">
+        <img class="reveal" style="--d:.0s" src="screenshots/pill-music.png" width="1480" height="103" alt="Пігулка з обкладинкою треку та персонажем">
+        <img class="reveal" style="--d:.08s" src="screenshots/pill-meeting.png" width="1480" height="103" alt="Пігулка з найближчою нарадою">
+        <img class="reveal" style="--d:.16s" src="screenshots/pill-timer.png" width="1480" height="103" alt="Пігулка з таймером">
+        <img class="reveal" style="--d:.24s" src="screenshots/pill-tracker.png" width="1480" height="103" alt="Пігулка з обліком часу">
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="bento-head reveal">
+        <h2 style="font-size: clamp(32px, 3.6vw, 46px)">Усе під рукою, коли треба</h2>
+        <p>Розгорніть острів, і в ньому вкладки для щоденних дрібниць. Без браузера, без пошуку потрібної програми.</p>
+      </div>
+      <div class="bento">
+        <article class="cell wide c-chat reveal">
+          <div class="cell-text">
+            <h3><i class="ph ph-chat-circle-text"></i>ШІ-чат на власному ключі</h3>
+            <p>Claude, ChatGPT, Gemini, Groq або локальна модель. Додайте скріншот, PDF чи Word і питайте. Ключ зашифровано на вашому ПК.</p>
+          </div>
+          <div class="crop"><img src="screenshots/chat.png" width="1480" height="695" alt="Вкладка ШІ-чату з розмовою" loading="lazy"></div>
+        </article>
+        <article class="cell c-cal reveal" style="--d:.06s">
+          <div class="cell-text">
+            <h3><i class="ph ph-calendar-blank"></i>Календар</h3>
+            <p>Google та Outlook. За 5 хвилин до наради нагадає й дасть кнопку Meet, Teams чи Zoom.</p>
+          </div>
+          <div class="crop"><img src="screenshots/calendar.png" width="1480" height="695" alt="Вкладка календаря з подіями на тиждень" loading="lazy"></div>
+        </article>
+        <article class="cell c-weather reveal">
+          <div class="cell-text">
+            <h3><i class="ph ph-cloud-sun"></i>Погода</h3>
+            <p>Живе небо, прогноз на день і тиждень, попередження про дощ.</p>
+          </div>
+          <div class="crop"><img src="screenshots/weather.png" width="1480" height="695" alt="Вкладка погоди" loading="lazy"></div>
+        </article>
+        <article class="cell c-track reveal" style="--d:.06s">
+          <div class="cell-text">
+            <h3><i class="ph ph-timer"></i>Облік часу</h3>
+            <p>Скільки годин пішло на роботу чи навчання. Звіт за тиждень і експорт у Excel.</p>
+          </div>
+          <div class="crop"><img src="screenshots/tracker.png" width="1480" height="695" alt="Вкладка обліку часу" loading="lazy"></div>
+        </article>
+        <article class="cell c-clip reveal" style="--d:.12s">
+          <div class="cell-text">
+            <h3><i class="ph ph-clipboard-text"></i>Буфер обміну</h3>
+            <p>Історія скопійованого з пошуком. Клік вставляє запис туди, де ви друкували.</p>
+          </div>
+          <div class="crop"><img src="screenshots/clipboard.png" width="1480" height="695" alt="Вкладка історії буфера обміну" loading="lazy"></div>
+        </article>
+        <article class="cell c-alert reveal">
+          <div class="cell-text">
+            <h3><i class="ph ph-bell-ringing"></i>Сповіщення в острові</h3>
+            <p>Telegram, пошта й інші програми показують сповіщення в острові, а не в кутку екрана. Можна залишити й звичні сповіщення Windows.</p>
+          </div>
+          <div class="alert-img"><img src="screenshots/alert-notification.png" width="1480" height="220" alt="Сповіщення з Telegram в острові з кнопками Відкрити та Закрити" loading="lazy"></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="command">
+    <div class="wrap stack">
+      <div class="reveal">
+        <h2>Alt+Space, і острів стає рядком команд</h2>
+        <p>Програми, файли, калькулятор і курси валют НБУ. Нагадування й таймери пишіть звичайними словами.</p>
+        <div class="examples">
+          <code>нагадай завтра о 9 подзвонити мамі</code>
+          <code>таймер 10 хв</code>
+          <code>100 usd</code>
+          <code>(1250+380)*1,2</code>
+          <code>? як перекласти «дедлайн»</code>
+        </div>
+      </div>
+      <div class="cmd-grid">
+        <figure class="reveal">
+          <div class="shot"><img src="screenshots/command-remind.png" width="1480" height="365" alt="Командний рядок розпізнав нагадування на завтра о 9:00" loading="lazy"></div>
+          <figcaption>Нагадування однією фразою українською, англійською чи російською.</figcaption>
+        </figure>
+        <figure class="reveal" style="--d:.08s">
+          <div class="shot"><img src="screenshots/command-currency.png" width="1480" height="457" alt="Конвертація 100 доларів у гривні та інші валюти" loading="lazy"></div>
+          <figcaption>Валюти за офіційним курсом НБУ. Enter копіює результат.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="claude">
+    <div class="wrap split">
+      <div class="shots">
+        <div class="shot reveal"><img src="screenshots/claude-permission.png" width="1480" height="409" alt="Запит дозволу від Claude Code в острові" loading="lazy"></div>
+      </div>
+      <div class="reveal" style="--d:.08s">
+        <h2>Для тих, хто пише код із Claude Code</h2>
+        <p>Острів показує, що зараз робить агент. Коли він просить дозволу чи ставить питання, відповідайте прямо з острова, не перемикаючись у термінал.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-bottom: 32px">
+    <div class="wrap">
+      <div class="facts">
+        <div class="reveal">
+          <i class="ph ph-lock-simple"></i>
+          <h3>Без акаунтів</h3>
+          <p>Нотатки, історія й налаштування лишаються на вашому ПК.</p>
+        </div>
+        <div class="reveal" style="--d:.06s">
+          <i class="ph ph-cursor-click"></i>
+          <h3>Не заважає</h3>
+          <p>Не забирає фокус і ховається в іграх та повноекранних програмах.</p>
+        </div>
+        <div class="reveal" style="--d:.12s">
+          <i class="ph ph-monitor"></i>
+          <h3>Кілька моніторів</h3>
+          <p>На основному екрані, на обраному або там, де курсор.</p>
+        </div>
+        <div class="reveal" style="--d:.18s">
+          <i class="ph ph-arrows-clockwise"></i>
+          <h3>Оновлюється сам</h3>
+          <p>Нова версія завантажується у фоні й ставиться після перезапуску.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="download" id="download">
+    <div class="wrap">
+      <div class="dl-box reveal">
+        <div>
+          <h2>Завантажте Islet</h2>
+          <p>Безкоштовно. Для Windows 10 (версія 2004 і новіші) та Windows 11.</p>
+          <a class="btn btn-primary" id="dl" href="https://github.com/PixelRedFox/islet-releases/releases/latest/download/Islet-win-Setup.exe">
+            <i class="ph ph-windows-logo"></i>Завантажити для Windows
+          </a>
+          <div class="dl-meta" id="dl-meta" aria-live="polite"></div>
+        </div>
+        <ol class="steps">
+          <li><span>Запустіть <strong>Islet-win-Setup.exe</strong>. Права адміністратора не потрібні.</span></li>
+          <li><span>Якщо Windows покаже «Windows захистив ваш ПК», натисніть <strong>Докладніше</strong>, потім <strong>Виконати все одно</strong>. Так буває з новими програмами без платного сертифіката.</span></li>
+          <li><span>Якщо на ПК немає .NET 8, інсталятор докачає його сам. Острів з'явиться вгорі екрана й запускатиметься разом з Windows.</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Islet</span>
+    <div class="right">
+      <a href="https://github.com/PixelRedFox/islet-releases/releases">Усі версії</a>
+      <a href="mailto:ruslanstepenko@gmail.com?subject=Islet">Написати автору</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // reveal sections as they scroll into view
+  (() => {
+    const items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { items.forEach(el => el.classList.add('in')); return; }
+    const io = new IntersectionObserver(entries => {
+      for (const e of entries) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    items.forEach(el => io.observe(el));
+  })();
+
+  // latest version and installer size from GitHub (the button works without this too)
+  (async () => {
+    const meta = document.getElementById('dl-meta');
+    try {
+      const r = await fetch('https://api.github.com/repos/PixelRedFox/islet-releases/releases/latest');
+      if (!r.ok) throw new Error(r.status);
+      const rel = await r.json();
+      const setup = rel.assets.find(a => a.name.endsWith('Setup.exe'));
+      const date = new Date(rel.published_at).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
+      meta.textContent = `Версія ${rel.tag_name.replace(/^v/, '')}, ${date}` + (setup ? `, ${(setup.size / 1048576).toFixed(1).replace('.', ',')} МБ` : '');
+      if (setup) document.getElementById('dl').href = setup.browser_download_url;
+    } catch {
+      meta.textContent = 'Остання версія з GitHub';
+    }
+  })();
+</script>
+</body>
+</html>
