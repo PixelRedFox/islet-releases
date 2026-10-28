@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Конфіденційність · Islet</title>
+<meta name="description" content="Які дані обробляють програма Islet для Windows і розширення Islet для браузера.">
+<link rel="icon" type="image/png" href="icon.png">
+<style>
+  :root {
+    --bg: #0c0c0e;
+    --surface: #141417;
+    --line: rgb(255 255 255 / .08);
+    --text: #f3f1ec;
+    --text-2: #b4b2ad;
+    --text-3: #85837f;
+    --accent: #ffb35c;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f4f3f1;
+      --surface: #ffffff;
+      --line: rgb(20 20 24 / .1);
+      --text: #141417;
+      --text-2: #4b4a47;
+      --text-3: #6f6d69;
+      --accent: #c46f0f;
+      color-scheme: light;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+  header { border-bottom: 1px solid var(--line); }
+  nav { display: flex; align-items: center; height: 68px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 19px; text-decoration: none; color: inherit; }
+  .brand img { width: 30px; height: 30px; border-radius: 8px; }
+  main { padding: 64px 0 80px; }
+  h1, h2 {
+    font-family: "Segoe UI Variable Display", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+    font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance;
+  }
+  h1 { font-size: clamp(34px, 5vw, 46px); margin: 0 0 12px; }
+  h2 { font-size: 24px; margin: 48px 0 12px; }
+  p, li { color: var(--text-2); text-wrap: pretty; }
+  p { margin: 0 0 14px; }
+  ul { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  strong { color: var(--text); font-weight: 600; }
+  a { color: var(--accent); }
+  code { font-family: "Cascadia Code", Consolas, monospace; font-size: .9em; }
+  .updated { color: var(--text-3); font-size: 15px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    padding: 20px 24px; margin: 28px 0 0;
+  }
+  .card p:last-child { margin: 0; }
+  footer { border-top: 1px solid var(--line); padding: 28px 0 44px; color: var(--text-3); font-size: 14.5px; }
+  footer a { color: inherit; }
+  @media (max-width: 520px) { .wrap { padding: 0 16px; } main { padding: 40px 0 56px; } }
+</style>
+</head>
+<body>
+<header>
+  <nav class="wrap"><a class="brand" href="./"><img src="icon.png" alt="" width="30" height="30">Islet</a></nav>
+</header>
+
+<main class="wrap">
+  <h1>Політика конфіденційності</h1>
+  <p class="updated">Оновлено 28 жовтня 2026 року</p>
+
+  <div class="card">
+    <p><strong>Коротко:</strong> Islet не має облікових записів, аналітики, реклами чи власного сервера. Ваші дані зберігаються на вашому комп'ютері. В інтернет іде лише те, що потрібно для функцій, які ви самі вмикаєте, і лише до сервісів, названих нижче.</p>
+  </div>
+
+  <h2>Розширення Islet для браузера</h2>
+  <p>Розширення «Islet: завантаження в острові» для Chrome, Edge, Firefox та інших браузерів показує ваші завантаження в програмі Islet.</p>
+  <ul>
+    <li><strong>Що читає:</strong> про кожне завантаження — назву й шлях файлу, адресу (URL), з якої він завантажується, розмір, скільки вже завантажено і стан (триває, завершено, помилка). Також назву браузера, щоб показати, звідки завантаження.</li>
+    <li><strong>Куди передає:</strong> лише програмі Islet на цьому ж комп'ютері через native messaging (хост <code>com.pixelredfox.islet</code>). Розширення не звертається до жодних серверів і нічого не надсилає в інтернет.</li>
+    <li><strong>Що зберігає:</strong> нічого. Розширення не веде історію. Програма Islet тримає дані про завантаження в пам'яті, поки показує їх, і не записує на диск.</li>
+    <li><strong>Чого не робить:</strong> не читає вміст сторінок, історію переглядів, файли cookie чи паролі. Не починає, не змінює й не видаляє завантаження.</li>
+  </ul>
+  <p>Дані з розширення не продаються, не передаються третім сторонам і не використовуються ні для чого, крім показу завантажень в острові.</p>
+
+  <h2>Програма Islet для Windows</h2>
+  <p>Налаштування, нотатки, історія буфера обміну, трекер часу та інші дані зберігаються локально в папці <code>%LOCALAPPDATA%\Islet</code> і <code>%APPDATA%\Islet</code>. Вони нікуди не надсилаються. Видалення програми або цих папок стирає все.</p>
+  <p>Деякі функції звертаються до зовнішніх сервісів. Надсилається лише потрібне для запиту:</p>
+  <ul>
+    <li><strong>Погода</strong> — Open-Meteo: координати вибраного міста.</li>
+    <li><strong>Текст пісні</strong> — LRCLIB: виконавець, назва й тривалість пісні, що грає.</li>
+    <li><strong>Курси валют</strong> — Національний банк України: запит курсів без жодних ваших даних.</li>
+    <li><strong>Оновлення</strong> — GitHub: перевірка й завантаження нових версій.</li>
+    <li><strong>ШІ-чат і голос у текст через хмару</strong> — лише якщо ви додали свій ключ: ваші повідомлення або запис голосу йдуть вибраному постачальнику (Anthropic, OpenAI, Google Gemini, Groq чи OpenRouter) за його правилами конфіденційності. Ключ зберігається тільки на вашому комп'ютері.</li>
+    <li><strong>Голос у текст на комп'ютері</strong> — одноразове завантаження моделі розпізнавання з Hugging Face. Сам запис не залишає комп'ютер.</li>
+    <li><strong>Календар</strong> — лише адреса календаря, яку ви вказали.</li>
+  </ul>
+  <p>Звіт про помилку надсилається, тільки коли ви самі натискаєте відповідну кнопку, і ви бачите його вміст перед відправленням.</p>
+
+  <h2>Діти</h2>
+  <p>Islet не призначений спеціально для дітей і не збирає свідомо жодних даних про них.</p>
+
+  <h2>Зміни</h2>
+  <p>Якщо правила зміняться, нова версія з'явиться на цій сторінці зі свіжою датою.</p>
+
+  <h2>Контакти</h2>
+  <p>Питання щодо конфіденційності: <a href="mailto:ruslanstepenko@gmail.com?subject=Islet%20privacy">ruslanstepenko@gmail.com</a>.</p>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Islet · <a href="./">Головна</a></div>
+</footer>
+</body>
+</html>
