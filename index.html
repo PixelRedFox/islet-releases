@@ -144,6 +144,27 @@
     background: radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%), var(--surface); }
   .c-alert .alert-img { padding: 26px 26px 26px 0; }
   .c-alert .alert-img img { border-radius: 14px; }
+  .c-karaoke { grid-column: span 4; }
+  .c-rec, .c-voice, .c-notes, .c-idle { grid-column: span 2; }
+  .cell .crop.right img { transform: translate(-41%, 0); }
+  /* the pill sits in the middle of a wide shot: zoom in on it */
+  .cell .pill-img { margin: auto 22px 26px; overflow: hidden; border-radius: 14px; border: 1px solid var(--line); }
+  .cell .pill-img img { width: 250%; max-width: none; margin-left: -75%; }
+  .c-row { grid-column: span 6; display: grid; grid-template-columns: 1fr 1.4fr; align-items: center; }
+  .c-row .row-img { padding: 26px 26px 26px 0; }
+  .c-row .row-img img { border-radius: 14px; }
+
+  /* ---------- phone ---------- */
+  .phone-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 64px; align-items: center; }
+  .phone-grid h2 { font-size: clamp(32px, 3.6vw, 46px); }
+  .phone-grid p { margin-top: 18px; }
+  .phone-list { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 14px; }
+  .phone-list li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; color: var(--text-2); font-size: 16px; }
+  .phone-list i { color: var(--accent); font-size: 22px; line-height: 1.4; }
+  .phone-list strong { color: var(--text); font-weight: 600; }
+  .phone-shots { display: grid; gap: 14px; }
+  .phone-shots img { border-radius: 14px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .phone-shots img:nth-child(2) { width: 94%; margin-left: 6%; }
 
   /* ---------- command bar ---------- */
   .stack { text-align: left; }
@@ -163,7 +184,7 @@
   .split .shots { display: grid; gap: 16px; }
 
   /* ---------- facts ---------- */
-  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; border-top: 1px solid var(--line); padding-top: 48px; }
+  .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px 40px; border-top: 1px solid var(--line); padding-top: 48px; }
   .facts i { font-size: 28px; color: var(--accent); }
   .facts h3 { font-size: 18px; margin: 14px 0 6px; letter-spacing: -0.01em; }
   .facts p { font-size: 15px; }
@@ -214,7 +235,9 @@
     nav .btn { margin-left: auto; }
     nav .btn .long { display: none; }
     .hero { padding: 40px 0 64px; }
-    .hero-grid, .pills-grid, .split, .dl-box, .c-alert { grid-template-columns: 1fr; }
+    .hero-grid, .pills-grid, .split, .dl-box, .c-alert, .c-row, .phone-grid { grid-template-columns: 1fr; }
+    .c-row .row-img { padding: 0 20px 20px; }
+    .phone-shots img:nth-child(2) { width: 100%; margin-left: 0; }
     .hero-grid { gap: 40px; }
     .hero-shot { --tilt: 0deg; }
     .pill-list img:nth-child(2n) { width: 100%; margin-left: 0; }
@@ -241,6 +264,7 @@
     <a class="brand" href="#"><img src="icon.png" alt="" width="30" height="30">Islet</a>
     <div class="nav-links">
       <a href="#features">Можливості</a>
+      <a href="#phone">Телефон</a>
       <a href="#command">Командний рядок</a>
       <a href="#claude">Claude Code</a>
     </div>
@@ -253,14 +277,14 @@
     <div class="wrap hero-grid">
       <div>
         <h1>Dynamic Island <em>для Windows</em></h1>
-        <p>Музика, таймери, календар, погода й ШІ-чат у маленькому острові вгорі екрана. Наведіть мишку, і він розкриється.</p>
+        <p>Музика з караоке, дзвінки й коди з телефона, запис екрана, календар, погода й ШІ-чат у маленькому острові вгорі екрана. Наведіть мишку, і він розкриється.</p>
         <div class="hero-ctas">
           <a class="btn btn-primary" href="#download"><i class="ph ph-windows-logo"></i>Завантажити для Windows</a>
           <a class="btn btn-ghost" href="#features">Що він вміє</a>
         </div>
       </div>
       <div class="shot hero-shot">
-        <img src="screenshots/home.png" width="1480" height="695" alt="Розгорнутий острів Islet: плеєр з обкладинкою, керування Wi-Fi, Bluetooth і темою, гучність та інструменти екрана">
+        <img src="screenshots/home.png" width="1480" height="695" alt="Розгорнутий острів Islet: плеєр з обкладинкою, заряд телефона й ноутбука, керування Wi-Fi, Bluetooth і темою, гучність та інструменти екрана">
       </div>
     </div>
   </section>
@@ -269,13 +293,14 @@
     <div class="wrap pills-grid">
       <div class="reveal">
         <h2>Найважливіше зараз, без зайвих вікон</h2>
-        <p>У спокої острів стає маленькою пігулкою: трек, що грає, найближча нарада, таймер чи час на задачу. Нічого не відбувається? У ньому живе персонаж, який стежить за курсором і танцює під музику.</p>
+        <p>У спокої острів стає маленькою пігулкою: трек і рядок пісні, що звучить зараз, найближча нарада, таймер, час на задачу чи запис екрана. Нічого не відбувається? У ньому живе персонаж, який стежить за курсором і танцює під музику.</p>
       </div>
       <div class="pill-list">
         <img class="reveal" style="--d:.0s" src="screenshots/pill-music.png" width="1480" height="103" alt="Пігулка з обкладинкою треку та персонажем">
-        <img class="reveal" style="--d:.08s" src="screenshots/pill-meeting.png" width="1480" height="103" alt="Пігулка з найближчою нарадою">
-        <img class="reveal" style="--d:.16s" src="screenshots/pill-timer.png" width="1480" height="103" alt="Пігулка з таймером">
-        <img class="reveal" style="--d:.24s" src="screenshots/pill-tracker.png" width="1480" height="103" alt="Пігулка з обліком часу">
+        <img class="reveal" style="--d:.08s" src="screenshots/pill-lyrics.png" width="1480" height="103" alt="Пігулка з рядком пісні, який звучить зараз">
+        <img class="reveal" style="--d:.16s" src="screenshots/pill-meeting.png" width="1480" height="103" alt="Пігулка з найближчою нарадою">
+        <img class="reveal" style="--d:.24s" src="screenshots/pill-recording.png" width="1480" height="103" alt="Пігулка під час запису екрана з лічильником часу">
+        <img class="reveal" style="--d:.32s" src="screenshots/pill-timer.png" width="1480" height="103" alt="Пігулка з таймером">
       </div>
     </div>
   </section>
@@ -301,6 +326,20 @@
           </div>
           <div class="crop"><img src="screenshots/calendar.png" width="1480" height="695" alt="Вкладка календаря з подіями на тиждень" loading="lazy"></div>
         </article>
+        <article class="cell wide c-karaoke reveal">
+          <div class="cell-text">
+            <h3><i class="ph ph-microphone-stage"></i>Караоке в плеєрі</h3>
+            <p>Spotify, YouTube в браузері чи будь-який плеєр: текст пісні прокручується в такт, рядок, що звучить, підсвічено.</p>
+          </div>
+          <div class="crop"><img src="screenshots/karaoke.png" width="1480" height="695" alt="Плеєр на Головній з текстом пісні, що прокручується" loading="lazy"></div>
+        </article>
+        <article class="cell c-rec reveal" style="--d:.06s">
+          <div class="cell-text">
+            <h3><i class="ph ph-video-camera"></i>Запис екрана</h3>
+            <p>Область чи весь екран у MP4, HEVC або WMV, зі звуком комп'ютера чи мікрофона. Клік по пігулці зупиняє запис, а сам острів у відео не потрапляє.</p>
+          </div>
+          <div class="pill-img"><img src="screenshots/pill-recording.png" width="1480" height="103" alt="Пігулка під час запису екрана" loading="lazy"></div>
+        </article>
         <article class="cell c-weather reveal">
           <div class="cell-text">
             <h3><i class="ph ph-cloud-sun"></i>Погода</h3>
@@ -322,6 +361,34 @@
           </div>
           <div class="crop"><img src="screenshots/clipboard.png" width="1480" height="695" alt="Вкладка історії буфера обміну" loading="lazy"></div>
         </article>
+        <article class="cell c-notes reveal">
+          <div class="cell-text">
+            <h3><i class="ph ph-note-pencil"></i>Нотатки й таймери</h3>
+            <p>Нотатки з чеклістами, таймер і нагадування звичайними словами: «нагадай завтра о 9».</p>
+          </div>
+          <div class="crop right"><img src="screenshots/notes.png" width="1480" height="695" alt="Нотатка з чеклістом поруч із таймером" loading="lazy"></div>
+        </article>
+        <article class="cell c-voice reveal" style="--d:.06s">
+          <div class="cell-text">
+            <h3><i class="ph ph-waveform"></i>Голос у текст</h3>
+            <p>Ctrl+Shift+Space, скажіть, ще раз Ctrl+Shift+Space: текст з'явиться там, де курсор. Розпізнавання на вашому ПК або в хмарі.</p>
+          </div>
+          <div class="pill-img"><img src="screenshots/pill-dictation.png" width="1480" height="103" alt="Пігулка під час диктування" loading="lazy"></div>
+        </article>
+        <article class="cell c-idle reveal" style="--d:.12s">
+          <div class="cell-text">
+            <h3><i class="ph ph-sun-horizon"></i>Коли музика стихла</h3>
+            <p>На місці плеєра погода, нотатки, календар, буфер чи полиця. Що саме, вирішуєте ви.</p>
+          </div>
+          <div class="crop"><img src="screenshots/home-idle.png" width="1480" height="695" alt="Картка погоди на місці плеєра" loading="lazy"></div>
+        </article>
+        <article class="cell c-row reveal">
+          <div class="cell-text">
+            <h3><i class="ph ph-download-simple"></i>Завантаження з браузера</h3>
+            <p>Chrome, Edge, Firefox і Steam: файл, швидкість і скільки лишилось видно прямо в острові. Коли готово, одна кнопка відкриває файл.</p>
+          </div>
+          <div class="row-img"><img src="screenshots/downloads.png" width="1480" height="771" alt="Смужка завантаження внизу розгорнутого острова" loading="lazy"></div>
+        </article>
         <article class="cell c-alert reveal">
           <div class="cell-text">
             <h3><i class="ph ph-bell-ringing"></i>Сповіщення в острові</h3>
@@ -329,6 +396,25 @@
           </div>
           <div class="alert-img"><img src="screenshots/alert-notification.png" width="1480" height="220" alt="Сповіщення з Telegram в острові з кнопками Відкрити та Закрити" loading="lazy"></div>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="phone">
+    <div class="wrap phone-grid">
+      <div class="reveal">
+        <h2>Телефон поруч, навіть коли він у кишені</h2>
+        <p>Islet працює разом із програмою Windows «Зв'язок зі смартфоном» для Android та iPhone.</p>
+        <ul class="phone-list">
+          <li><i class="ph ph-phone-incoming"></i><span><strong>Дзвінки в острові.</strong> Хто дзвонить, видно одразу. Якщо дзвінки йдуть через Bluetooth, відповідайте кнопкою «Прийняти на ПК».</span></li>
+          <li><i class="ph ph-password"></i><span><strong>Коди з SMS в одну кнопку.</strong> Острів сам знаходить код підтвердження в повідомленні й копіює його.</span></li>
+          <li><i class="ph ph-battery-charging"></i><span><strong>Заряд телефона</strong> угорі острова і коротке повідомлення, коли телефон поставили на зарядку.</span></li>
+          <li><i class="ph ph-app-window"></i><span><strong>Назви застосунків</strong>, а не «Зв'язок зі смартфоном»: Viber, Monobank, Gmail.</span></li>
+        </ul>
+      </div>
+      <div class="phone-shots">
+        <img class="reveal" src="screenshots/alert-call.png" width="1480" height="220" alt="Вхідний дзвінок в острові з кнопками Сховати та Прийняти на ПК" loading="lazy">
+        <img class="reveal" style="--d:.08s" src="screenshots/alert-code.png" width="1480" height="220" alt="SMS з кодом входу і кнопкою Копіювати код" loading="lazy">
       </div>
     </div>
   </section>
@@ -393,6 +479,26 @@
           <i class="ph ph-arrows-clockwise"></i>
           <h3>Оновлюється сам</h3>
           <p>Нова версія завантажується у фоні й ставиться після перезапуску.</p>
+        </div>
+        <div class="reveal">
+          <i class="ph ph-frame-corners"></i>
+          <h3>Будь-який край</h3>
+          <p>Угорі, внизу, ліворуч чи праворуч, зі зсувом від центру й під панеллю завдань.</p>
+        </div>
+        <div class="reveal" style="--d:.06s">
+          <i class="ph ph-eye-slash"></i>
+          <h3>Ховається до потреби</h3>
+          <p>Іде за край екрана і повертається, коли затримати курсор біля краю, з потрібною вам затримкою.</p>
+        </div>
+        <div class="reveal" style="--d:.12s">
+          <i class="ph ph-circle-half"></i>
+          <h3>Світла й темна тема</h3>
+          <p>Колір акценту з Windows або свій. Кольори плеєра беруться з обкладинки.</p>
+        </div>
+        <div class="reveal" style="--d:.18s">
+          <i class="ph ph-keyboard"></i>
+          <h3>Гарячі клавіші</h3>
+          <p>Скріншот, запис екрана, текст з екрана, буфер. Кожну клавішу можна змінити.</p>
         </div>
       </div>
     </div>
