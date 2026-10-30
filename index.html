@@ -153,6 +153,14 @@
   .c-row { grid-column: span 6; display: grid; grid-template-columns: 1fr 1.4fr; align-items: center; }
   .c-row .row-img { padding: 26px 26px 26px 0; }
   .c-row .row-img img { border-radius: 14px; }
+  .c-codes { grid-column: span 4; }
+  .c-editor { grid-column: span 2; }
+  .c-editor .shot-img { margin: auto 22px 26px; overflow: hidden; border-radius: 14px; border: 1px solid var(--line); }
+  .c-editor .shot-img img { width: 100%; }
+  .c-alert .alert-img img + img { margin-top: 12px; }
+  .c-pets { grid-column: span 6; display: grid; grid-template-columns: 1fr 1.4fr; align-items: center; }
+  .c-pets .pets { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 26px 26px 26px 0; }
+  .c-pets .pill-img { margin: 0; }
 
   /* ---------- phone ---------- */
   .phone-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 64px; align-items: center; }
@@ -257,7 +265,8 @@
     nav .btn { margin-left: auto; }
     nav .btn .long { display: none; }
     .hero { padding: 40px 0 64px; }
-    .hero-grid, .pills-grid, .split, .dl-box, .c-alert, .c-row, .phone-grid, .support-box { grid-template-columns: 1fr; }
+    .hero-grid, .pills-grid, .split, .dl-box, .c-alert, .c-row, .c-pets, .phone-grid, .support-box { grid-template-columns: 1fr; }
+    .c-pets .pets { padding: 0 20px 20px; }
     .support-box { padding: 36px 22px; }
     .c-row .row-img { padding: 0 20px 20px; }
     .phone-shots img:nth-child(2) { width: 100%; margin-left: 0; }
@@ -379,10 +388,10 @@
         </article>
         <article class="cell c-clip reveal" style="--d:.12s">
           <div class="cell-text">
-            <h3><i class="ph ph-clipboard-text"></i>Буфер обміну</h3>
-            <p>Історія скопійованого з пошуком. Клік вставляє запис туди, де ви друкували.</p>
+            <h3><i class="ph ph-clipboard-text"></i>Буфер і полиця</h3>
+            <p>В одній вкладці: історія скопійованого з пошуком і полиця для файлів, які треба кудись перенести. Клік вставляє запис туди, де ви друкували.</p>
           </div>
-          <div class="crop"><img src="screenshots/clipboard.png" width="1480" height="695" alt="Вкладка історії буфера обміну" loading="lazy"></div>
+          <div class="crop"><img src="screenshots/clipboard.png" width="1480" height="695" alt="Вкладка з історією буфера обміну зліва і полицею з файлами справа" loading="lazy"></div>
         </article>
         <article class="cell c-notes reveal">
           <div class="cell-text">
@@ -408,16 +417,52 @@
         <article class="cell c-row reveal">
           <div class="cell-text">
             <h3><i class="ph ph-squares-four"></i>Ярлики й завантаження</h3>
-            <p>Унизу «Головної» — ваші програми, папки й файли: один клік відкриває їх. Поки щось завантажується з Chrome, Edge, Firefox чи Steam, на цьому місці видно файл, швидкість і скільки лишилось. Можна показувати завантаження під ярликами або зовсім без ярликів.</p>
+            <p>Унизу «Головної» — ваші програми, папки й файли: один клік відкриває їх. Поки щось завантажується з Chrome, Edge, Firefox чи Steam, на цьому місці видно файл, швидкість і скільки лишилось. Можна показувати завантаження під ярликами або зовсім без ярликів. Точний відсоток дає <a href="https://chromewebstore.google.com/detail/apfgmiaanfodddgogkoemahjmlmnfiio" target="_blank" rel="noopener">розширення Islet у Chrome Web Store</a>.</p>
           </div>
           <div class="row-img"><img src="screenshots/downloads.png" width="1480" height="771" alt="Смужка завантаження внизу розгорнутого острова" loading="lazy"></div>
+        </article>
+        <article class="cell c-row reveal">
+          <div class="cell-text">
+            <h3><i class="ph ph-hand-grabbing"></i>Перетягніть файл на острів</h3>
+            <p>Острів розкриється з двома місцями: «На полицю», щоб тимчасово перенести файл в інше вікно, і «В ярлики», щоб програма чи папка лишилася на «Головній» назавжди.</p>
+          </div>
+          <div class="row-img"><img src="screenshots/drop-zones.png" width="1480" height="807" alt="Острів під час перетягування ярлика: зони На полицю і В ярлики" loading="lazy"></div>
+        </article>
+        <article class="cell wide c-codes reveal">
+          <div class="cell-text">
+            <h3><i class="ph ph-shield-check"></i>Коди 2FA</h3>
+            <p>Коди двофакторної автентифікації, як у Google Authenticator. Додайте сервіс, виділивши QR-код на екрані, і клік вставить код у поле входу. Ключі зашифровані вашим обліковим записом Windows, а показ кодів можна підтверджувати Windows Hello.</p>
+          </div>
+          <div class="crop"><img src="screenshots/codes.png" width="1480" height="695" alt="Вкладка Коди з шестизначними кодами GitHub, Google, Discord і Binance та кільцями відліку" loading="lazy"></div>
+        </article>
+        <article class="cell c-editor reveal" style="--d:.06s">
+          <div class="cell-text">
+            <h3><i class="ph ph-pencil-simple-line"></i>Редактор скріншотів</h3>
+            <p>Після знімка — кнопка «Редагувати»: олівець, маркер, рамки, стрілки, текст, розмиття й обрізання.</p>
+          </div>
+          <div class="shot-img"><img src="screenshots/editor.png" width="2370" height="1484" alt="Редактор скріншотів з обведеною областю, стрілкою й розмиттям" loading="lazy"></div>
         </article>
         <article class="cell c-alert reveal">
           <div class="cell-text">
             <h3><i class="ph ph-bell-ringing"></i>Сповіщення в острові</h3>
-            <p>Telegram, пошта й інші програми показують сповіщення в острові, а не в кутку екрана. Можна залишити й звичні сповіщення Windows.</p>
+            <p>Telegram, пошта й інші програми показують сповіщення в острові, а не в кутку екрана. Можна залишити й звичні сповіщення Windows. Поки ви граєте, острів мовчить, а після гри показує одну картку: що й від кого прийшло.</p>
           </div>
-          <div class="alert-img"><img src="screenshots/alert-notification.png" width="1480" height="220" alt="Сповіщення з Telegram в острові з кнопками Відкрити та Закрити" loading="lazy"></div>
+          <div class="alert-img">
+            <img src="screenshots/alert-notification.png" width="1480" height="220" alt="Сповіщення з Telegram в острові з кнопками Відкрити та Закрити" loading="lazy">
+            <img src="screenshots/alert-after-game.png" width="1480" height="220" alt="Картка після гри: Telegram 3, Discord 1, Outlook 1, з кнопками Переглянути і Закрити все" loading="lazy">
+          </div>
+        </article>
+        <article class="cell c-pets reveal">
+          <div class="cell-text">
+            <h3><i class="ph ph-paw-print"></i>Улюбленець у пігулці</h3>
+            <p>Одноокий, що бере колір острова, цуценя, хом'як, рудий Подарюка та ще семеро друзів. Стежать за курсором, танцюють під музику й засинають, коли вас немає.</p>
+          </div>
+          <div class="pets">
+            <div class="pill-img"><img src="screenshots/pill-alien.png" width="1480" height="103" alt="Одноокий інопланетянин у пігулці" loading="lazy"></div>
+            <div class="pill-img"><img src="screenshots/pill-character.png" width="1480" height="103" alt="Рудий котик Подарюка в пігулці" loading="lazy"></div>
+            <div class="pill-img"><img src="screenshots/pill-dog.png" width="1480" height="103" alt="Цуценя в пігулці" loading="lazy"></div>
+            <div class="pill-img"><img src="screenshots/pill-hamster.png" width="1480" height="103" alt="Хом'як у пігулці" loading="lazy"></div>
+          </div>
         </article>
       </div>
     </div>
